@@ -24,19 +24,19 @@ int main() {
       if(command.substr(5) == "echo" | command.substr(5) == "exit" | command.substr(5) == "type") {
         std::cout<<command.substr(5)<<" is a shell builtin"<<std::endl;
       } else {
+        bool path_found = 0;
         std::string path = getenv("PATH");
         std::istringstream ss(path);
         std::string directory;
-        bool found = 0;
         while(getline(ss, directory, ':')) {
-          const std::string fullpath = directory + "/" + command.substr(5);
-          if(access(fullpath.c_str(), X_OK) == 0) {
+          std::string fullpath = directory + "/" + command.substr(5);
+          if(!access(fullpath.c_str(), X_OK)) {
             std::cout<<command.substr(5)<<" is "<<fullpath<<std::endl;
-            found = 1;
+            path_found = 1;
             break;
           }
         }
-        if(!found) {
+        if(!path_found) {
           std::cout<<command.substr(5)<<": not found"<<std::endl;
         }
       }
