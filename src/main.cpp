@@ -12,6 +12,6 @@ int main() {
   //Handling invalid prompts
   std::string command;
   std::getline(std::cin, command);
-  std::cout<<command<<" :command not found"<<std::endl;
+  std::cout<<command<<": command not found"<<std::endl;
 
 }
