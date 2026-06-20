@@ -41,7 +41,27 @@ int main() {
         }
       }
     } else {
-      std::cout<<command<<": command not found"<<std::endl;
+      bool path_found = 0;
+      
+      std::istringstream ss1(command);
+      std::string file;
+      getline(ss1, file, ' ');
+
+      std::string path = getenv("PATH");
+      std::istringstream ss2(path);
+      std::string directory;
+
+      while(getline(ss2, directory, ':')){
+        std::string fullpath = directory + '/' + file;
+        if(!access(fullpath.c_str(), X_OK)) {
+          path_found = 1;
+          std::system(command.c_str());
+          break;
+        }
+      }
+      if(!path_found) {
+        std::cout<<command<<": command not found"<<std::endl;
+      }
     }
   }
 
