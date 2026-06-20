@@ -31,6 +31,7 @@ int main() {
           const std::string fullpath = directory + "/" + command.substr(5);
           if(access(fullpath.c_str(), X_OK) == 0) {
             std::cout<<command.substr(5)<<" is "<<fullpath<<std::endl;
+            break;
           }
         }
         std::cout<<command.substr(5)<<": not found"<<std::endl;
