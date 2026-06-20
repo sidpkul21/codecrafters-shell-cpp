@@ -27,14 +27,18 @@ int main() {
         std::string path = getenv("PATH");
         std::istringstream ss(path);
         std::string directory;
+        bool found = 0;
         while(getline(ss, directory, ':')) {
           const std::string fullpath = directory + "/" + command.substr(5);
           if(access(fullpath.c_str(), X_OK) == 0) {
             std::cout<<command.substr(5)<<" is "<<fullpath<<std::endl;
+            found = 1;
             break;
           }
         }
-        std::cout<<command.substr(5)<<": not found"<<std::endl;
+        if(!found) {
+          std::cout<<command.substr(5)<<": not found"<<std::endl;
+        }
       }
     } else {
       std::cout<<command<<": command not found"<<std::endl;
