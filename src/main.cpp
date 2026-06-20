@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -18,6 +20,8 @@ int main() {
     std::getline(std::cin, command);
     if(command == "exit") {
       break;
+    } else if(command == "pwd") {
+      std::cout<<std::system("cd")<<std::endl;
     } else if(command.substr(0, 5) == "echo ") {
       std::cout<<command.substr(5)<<std::endl;
     } else if(command.substr(0, 5) == "type ") {
