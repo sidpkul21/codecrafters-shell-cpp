@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <unistd.h>
+#include <filesystem>
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -19,7 +20,8 @@ int main() {
     if(command == "exit") {
       break;
     } else if(command == "pwd") {
-      std::cout<<std::system("cd")<<std::endl;
+      std::string curr_dir = std::filesystem::current_path().string();
+      std::cout<<curr_dir<<std::endl;
     } else if(command.substr(0, 5) == "echo ") {
       std::cout<<command.substr(5)<<std::endl;
     } else if(command.substr(0, 5) == "type ") {
