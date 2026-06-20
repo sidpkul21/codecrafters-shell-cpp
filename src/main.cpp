@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <unistd.h>
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -22,6 +24,15 @@ int main() {
       if(command.substr(5) == "echo" | command.substr(5) == "exit" | command.substr(5) == "type") {
         std::cout<<command.substr(5)<<" is a shell builtin"<<std::endl;
       } else {
+        std::string path = getenv("PATH");
+        std::istringstream ss(path);
+        std::string directory;
+        while(getline(ss, directory, ':')) {
+          const std::string fullpath = directory + "/" + command.substr(5);
+          if(access(fullpath.c_str(), X_OK) == 0) {
+            std::cout<<command.substr(5)<<" is "<<fullpath<<std::endl;
+          }
+        }
         std::cout<<command.substr(5)<<": not found"<<std::endl;
       }
     } else {
