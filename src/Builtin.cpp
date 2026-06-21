@@ -35,19 +35,11 @@ bool Builtin::execute(const Command& command) const{
             return true;
         }
 
-        std::string path = getenv("PATH");
-        std::istringstream ss(path);
-        std::string directory;
-
-        while(getline(ss, directory, ':')) {
-          std::string fullpath = directory + "/" + type_arg;
-          if(!access(fullpath.c_str(), X_OK)) {
-            std::cout << type_arg <<" is "<< fullpath << std::endl;
-            return true;
-          }
+        bool print = true;
+        if(!findfile(type_arg, print)) {
+            std::cout << type_arg << ": not found" <<std::endl;
         }
 
-        std::cout << type_arg << ": not found" <<std::endl;
         return true;
     }
 
@@ -59,20 +51,24 @@ bool Builtin::execute(const Command& command) const{
         }
         return true;
     }
-
-    std::string filename = command.name;
-    std::string path = getenv("PATH");
-    std::istringstream ss2(path);
-    std::string directory;
-
-    while(getline(ss2, directory, ':')){
-        std::string fullpath = directory + '/' + filename;
-        if(!access(fullpath.c_str(), X_OK)) {
-            std::system(command.input.c_str());
-            return true;
-        }
-      }
     
     std::cout << command.input.c_str() << ": command not found" << std::endl;
     return true;
+}
+
+bool Builtin::findfile(const std::string& file, bool print) const {
+    std::string path = getenv("PATH");
+    std::istringstream ss(path);
+    std::string directory;
+
+    while(getline(ss, directory, ':')) {
+        std::string fullpath = directory + "/" + file;
+        if(!access(fullpath.c_str(), X_OK)) {
+            if(print) {
+                std::cout << file <<" is "<< fullpath << std::endl;
+            }
+            return true;
+        }
+    }
+    return false;
 }
