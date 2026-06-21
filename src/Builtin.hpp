@@ -1,8 +1,8 @@
 #pragma once
 #include "Command.hpp"
 
-class Bulletin{
+class Builtin{
     public:
-        bool isBulletin(const Command& command) const;
+        bool isBuiltin(const Command& command) const;
         bool execute(const Command& command) const;
 };

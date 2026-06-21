@@ -21,7 +21,15 @@ void Shell::run() {
             break;
         }
 
+        Builtin builtin;
+        if(builtin.isBuiltin(command)) {
+            builtin.execute(command);
+        } else {
+            std::cout<<command.name<<": command not found"<<std::endl;
+        }
+        
     }
+
 }
 
 void Shell::print_prompt() const {
