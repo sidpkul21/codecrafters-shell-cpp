@@ -52,21 +52,11 @@ bool Builtin::execute(const Command& command) const{
     }
 
     if (command.name == "cd") {
-        std::string dir = command.args[0];
+        std::string target_dir = command.args[0];
 
-        std::string path = getenv("PATH");
-        std::istringstream ss1(path);
-        std::string directory;
-
-        while(getline(ss1, directory, ':')) {
-          std::cout << directory << std::endl;
-          if(directory == dir) {
-            std::filesystem::path target_dir = dir;
-            std::filesystem::current_path(target_dir);
-            return true;
-          }
+        if(chdir(target_dir.c_str()) != 0) {
+            std::cout << command.name << ": " << target_dir << ": No such file or directory";
         }
-        std::cout << command.name << ": " << dir << ": No such file or directory";
         return true;
     }
 
