@@ -7,7 +7,8 @@
 bool Builtin::isBuiltin(const Command& command) const{
     return command.name == "pwd"  ||
            command.name == "echo" ||
-           command.name == "type";
+           command.name == "type" ||
+           command.name == "cd";
 }
 
 bool Builtin::execute(const Command& command) const{
@@ -47,6 +48,24 @@ bool Builtin::execute(const Command& command) const{
         }
 
         std::cout << type_arg << ": not found" <<std::endl;
+        return true;
+    }
+
+    if (command.name == "cd") {
+        std::string dir = command.args[0];
+
+        std::string path = getenv("PATH");
+        std::istringstream ss1(path);
+        std::string directory;
+
+        while(getline(ss1, directory, ':')) {
+          if(directory == dir) {
+            std::filesystem::path target_dir = dir;
+            std::filesystem::current_path(target_dir);
+            return true;
+          }
+        }
+        std::cout << command.name << ": " << dir << ": No such file or directory";
         return true;
     }
 
