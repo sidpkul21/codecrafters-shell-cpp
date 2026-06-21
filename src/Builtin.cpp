@@ -55,7 +55,7 @@ bool Builtin::execute(const Command& command) const{
         std::string target_dir = command.args[0];
 
         if(chdir(target_dir.c_str()) != 0) {
-            std::cout << command.name << ": " << target_dir << ": No such file or directory";
+            std::cout << command.name << ": " << target_dir << ": No such file or directory" << std::endl;
         }
         return true;
     }
