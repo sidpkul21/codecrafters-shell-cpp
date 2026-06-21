@@ -59,6 +59,7 @@ bool Builtin::execute(const Command& command) const{
         std::string directory;
 
         while(getline(ss1, directory, ':')) {
+          std::cout << directory << std::endl;
           if(directory == dir) {
             std::filesystem::path target_dir = dir;
             std::filesystem::current_path(target_dir);
