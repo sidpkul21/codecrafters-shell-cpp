@@ -24,10 +24,15 @@ void Shell::run() {
         Builtin builtin;
         if(builtin.isBuiltin(command)) {
             builtin.execute(command);
-        } else {
-            std::cout<<command.name<<": command not found"<<std::endl;
         }
-        
+        else {
+            bool print = false;
+            if(builtin.findfile(command.name, print)) {
+                std::system(command.input.c_str());
+            } else {
+                std::cout << command.input << ": command not found" << std::endl;
+            }
+        }
     }
 
 }
