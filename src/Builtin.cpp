@@ -14,7 +14,7 @@ bool Builtin::isBuiltin(const Command& command) const{
 bool Builtin::execute(const Command& command) const{
     if(command.name == "echo") {
         for(const auto& elem:command.args) {
-            std::cout << elem;
+            std::cout << elem << " ";
         }
         std::cout << "\n";
         return true;
