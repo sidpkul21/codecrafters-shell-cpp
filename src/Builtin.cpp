@@ -46,6 +46,10 @@ bool Builtin::execute(const Command& command) const{
     if (command.name == "cd") {
         std::string target_dir = command.args[0];
 
+        if(target_dir == "~") {
+            target_dir = getenv("HOME");
+        }
+
         if(chdir(target_dir.c_str()) != 0) {
             std::cout << command.name << ": " << target_dir << ": No such file or directory" << std::endl;
         }
