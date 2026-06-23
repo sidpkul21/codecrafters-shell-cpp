@@ -35,8 +35,8 @@ bool Builtin::execute(const Command& command) const{
             return true;
         }
 
-        bool print = true;
-        if(!findfile(type_arg, print)) {
+        bool print_status = true;
+        if(!findfile(type_arg, print_status)) {
             std::cout << type_arg << ": not found" <<std::endl;
         }
 

@@ -26,8 +26,8 @@ void Shell::run() {
             builtin.execute(command);
         }
         else {
-            bool print = false;
-            if(builtin.findfile(command.name, print)) {
+            bool print_status = false;
+            if(builtin.findfile(command.name, print_status)) {
                 std::system(command.input.c_str());
             } else {
                 std::cout << command.input << ": command not found" << std::endl;
