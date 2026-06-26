@@ -13,6 +13,7 @@ namespace {
         bool isbuildingtoken = false;
         
         for(char c: input) {
+            std::cout<<"print char "<<c<<std::endl;
             if(c == '\'') {
                 isquote = !isquote;
                 isbuildingtoken = true;
