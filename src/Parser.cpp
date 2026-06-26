@@ -44,6 +44,7 @@ Command Parser::parse(const std::string& input) const{
     auto tokens = tokenizer(command.input);
     
     if(tokens.empty()) {
+        std::cout<<"empty?"<<std::endl;
         return command;
     }
 
