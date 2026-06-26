@@ -1,6 +1,7 @@
 #include "Parser.hpp"
 #include <string>
 #include <sstream>
+#include <iostream>
 
 namespace {
     std::vector<std::string> tokenizer(const std::string& input) {
@@ -29,6 +30,7 @@ namespace {
 
         if(isbuildingtoken) {
             tokens.push_back(current);
+            current.clear();
         }
 
         return tokens;
@@ -45,9 +47,11 @@ Command Parser::parse(const std::string& input) const{
     }
 
     command.name = tokens[0];
+    std::cout<<"command name: "<<command.name<<std::endl;
 
     for(size_t i = 0; i < tokens.size(); i ++) {
         command.args.push_back(tokens[i]);
+        std::cout<<"command name: "<<tokens[i]<<std::endl;
     }
     
     return command;
