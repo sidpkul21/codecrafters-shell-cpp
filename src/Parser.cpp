@@ -16,7 +16,7 @@ namespace {
             if(c == '\'') {
                 isquote = !isquote;
                 isbuildingtoken = true;
-            } else if(static_cast<unsigned char>(c) && !isquote) {
+            } else if(std::isspace(static_cast<unsigned char>(c)) && !isquote) {
                 if(isbuildingtoken) {
                     tokens.push_back(current);
                     current.clear();
