@@ -8,6 +8,7 @@ namespace {
         
         std::vector<std::string> tokens;
         std::string current;
+         std::cout<<"input "<<input<<std::endl;
 
         bool isquote = false;
         bool isbuildingtoken = false;
@@ -44,7 +45,6 @@ Command Parser::parse(const std::string& input) const{
     auto tokens = tokenizer(command.input);
     
     if(tokens.empty()) {
-        std::cout<<"empty?"<<std::endl;
         return command;
     }
 
