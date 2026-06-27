@@ -14,10 +14,13 @@ namespace {
         curr.clear();
         
         for(char c: input) {
-            if(c == '\'' || c == '"') {
+            if(c == '"') {
+                isdquote = !isdquote;
+                isbuildingtoken = true;
+            } else if(c == '\'' && !isdquote) {
                 issquote = !issquote;
-                isbuildingtoken = false;
-            } else if(std::isspace(static_cast<unsigned char>(c)) && !issquote) {
+                isbuildingtoken = true;
+            } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote)) {
                 if(isbuildingtoken) {
                     tokens.push_back(curr);
                     curr.clear();
