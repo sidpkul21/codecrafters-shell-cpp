@@ -23,6 +23,7 @@ namespace {
                 isbuildingtoken = false;
             } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote)) {
                 if(isbuildingtoken) {
+                    std::cout << "token " << curr << std::endl;
                     tokens.push_back(curr);
                     curr.clear();
                     isbuildingtoken = false;
