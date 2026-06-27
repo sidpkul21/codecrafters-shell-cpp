@@ -14,8 +14,8 @@ namespace {
         curr.clear();
         
         for(char c: input) {
-            std::cout<<c<<std::endl;
             if(c == '"') {
+                std::cout<<"found double quote"<<std::endl;
                 isdquote = !isdquote;
                 isbuildingtoken = false;
             } else if(c == '\'' && !isdquote) {
