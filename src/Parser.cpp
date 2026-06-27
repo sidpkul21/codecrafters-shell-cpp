@@ -10,25 +10,31 @@ namespace {
         bool isbuildingtoken = false;
         bool issquote = false;
         bool isdquote = false;
+        bool isbslash = false;
         std::string curr;
         curr.clear();
         
         for(char c: input) {
-            if(c == '"') {
+            if(c == '"' && !isbslash) {
                 isdquote = !isdquote;
                 isbuildingtoken = true;
-            } else if(c == '\'' && !isdquote) {
+            } else if(c == '\'' && !isdquote && !isbslash) {
                 issquote = !issquote;
                 isbuildingtoken = true;
-            } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote)) {
+            } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote && !isbslash)) {
                 if(isbuildingtoken) {
                     tokens.push_back(curr);
                     curr.clear();
                     isbuildingtoken = false;
                 }
+            } else if(c == '\\' && (!issquote && !isdquote)) {
+                isbslash = true;
             } else {
                 curr += c;
                 isbuildingtoken = true;
+                if(isbslash) {
+                    isbslash = false;
+                }
             }
         }
 
