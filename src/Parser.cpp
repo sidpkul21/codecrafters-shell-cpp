@@ -12,6 +12,7 @@ namespace {
         bool issquote = false;
         bool isdquote = false;
         std::string curr;
+        curr.clear();
         
         for(char c: input) {
             if(c == '"') {
@@ -20,10 +21,12 @@ namespace {
             } else if(c == '\'' && !isdquote) {
                 issquote = !issquote;
                 isbuildingtoken = false;
-            } else if(std::isspace(static_cast<unsigned char>(c)) && !issquote && !isdquote) {
-                tokens.push_back(curr);
-                curr.clear();
-                isbuildingtoken = false;
+            } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote)) {
+                if(isbuildingtoken) {
+                    tokens.push_back(curr);
+                    curr.clear();
+                    isbuildingtoken = false;
+                }
             } else {
                 curr += c;
                 isbuildingtoken = true;
