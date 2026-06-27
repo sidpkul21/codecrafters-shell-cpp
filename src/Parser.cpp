@@ -5,47 +5,97 @@
 
 namespace {
 
-    std::vector<std::string> tokenizer(const std::string& input) {
+    enum class processMode {
+        normal,
+        singlequote,
+        doublequote,
+        escape,
+    };
+
+    typedef struct state{
         std::vector<std::string> tokens;
+        std::string str;
+        processMode mode = processMode::normal;
         bool isbuildingtoken = false;
-        bool issquote = false;
-        bool isdquote = false;
-        bool isbslash = false;
-        std::string curr;
-        curr.clear();
-        
+    } state;
+
+    void buildtoken(char c, state &ctx) {
+        ctx.str += c;
+        ctx.isbuildingtoken = true;
+    }
+
+    void finishtoken(state &ctx) {
+        if(ctx.isbuildingtoken) {
+            ctx.tokens.push_back(ctx.str);
+            ctx.str.clear();
+            ctx.isbuildingtoken = false;
+        }
+    }
+
+    void processNormal(char c, state &ctx) {
+        if(c == '"') {
+            ctx.mode = processMode::doublequote;
+            ctx.isbuildingtoken = true;
+        } else if(c == '\'') {
+            ctx.mode = processMode::singlequote;
+            ctx.isbuildingtoken = true;
+        } else if(c == '\\') {
+            ctx.mode = processMode::escape;
+            ctx.isbuildingtoken = true;
+        } else if(std::isspace(static_cast<unsigned char>(c))) {
+            finishtoken(ctx);
+        } else {
+            buildtoken(c, ctx);
+        }            
+    }
+
+    void processSingleQuote(char c, state &ctx) {
+        if(c == '\'') {
+            ctx.mode = processMode::normal;
+            ctx.isbuildingtoken = true;
+        } else {
+            buildtoken(c, ctx);
+        }
+    }
+
+    void processDoubleQuote(char c, state &ctx) {
+        if(c == '"') {
+            ctx.mode = processMode::normal;
+            ctx.isbuildingtoken = true;
+        } else {
+            buildtoken(c, ctx);
+        }
+    }
+
+    void processEscape(char c, state &ctx) {
+        buildtoken(c, ctx);
+        ctx.mode = processMode::normal;
+    }
+
+    std::vector<std::string> tokenizer(const std::string& input) {
+        state ctx;
         for(char c: input) {
-            if(c == '"' && !isbslash) {
-                isdquote = !isdquote;
-                isbuildingtoken = true;
-            } else if(c == '\'' && !isdquote && !isbslash) {
-                issquote = !issquote;
-                isbuildingtoken = true;
-            } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote && !isbslash)) {
-                if(isbuildingtoken) {
-                    tokens.push_back(curr);
-                    curr.clear();
-                    isbuildingtoken = false;
-                }
-            } else if(c == '\\' && (!issquote && !isdquote)) {
-                isbslash = true;
-            } else {
-                curr += c;
-                isbuildingtoken = true;
-                if(isbslash) {
-                    isbslash = false;
-                }
+            switch(ctx.mode) {
+                case processMode::normal:
+                    processNormal(c, ctx);
+                    break;
+                case processMode::singlequote:
+                    processSingleQuote(c, ctx);
+                    break;
+                case processMode::doublequote:
+                    processDoubleQuote(c, ctx);
+                    break;
+                case processMode::escape:
+                    processEscape(c, ctx);
+                    break;
             }
         }
-
-        if(isbuildingtoken) {
-            tokens.push_back(curr);
-            curr.clear();
-        }
-
-        return tokens;
+        finishtoken(ctx);
+        return ctx.tokens;
     }
+
 }
+
 
 Command Parser::parse(const std::string& input) const{
     Command command;
