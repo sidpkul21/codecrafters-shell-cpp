@@ -6,7 +6,7 @@
 namespace {
 
     std::vector<std::string> tokenizer(const std::string& input) {
-        
+        std::cout<<input;
         std::vector<std::string> tokens;
         bool isbuildingtoken = false;
         bool issquote = false;
@@ -23,7 +23,6 @@ namespace {
                 isbuildingtoken = false;
             } else if(std::isspace(static_cast<unsigned char>(c)) && (!issquote && !isdquote)) {
                 if(isbuildingtoken) {
-                    std::cout << "token " << curr << std::endl;
                     tokens.push_back(curr);
                     curr.clear();
                     isbuildingtoken = false;
