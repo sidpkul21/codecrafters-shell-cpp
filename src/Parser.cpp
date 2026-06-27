@@ -4,37 +4,39 @@
 #include <iostream>
 
 namespace {
+
     std::vector<std::string> tokenizer(const std::string& input) {
         
         std::vector<std::string> tokens;
-        std::string current;
-
-        bool isquote = false;
         bool isbuildingtoken = false;
+        bool issquote = false;
+        bool isdquote = false;
+        std::string curr;
         
         for(char c: input) {
-            if(c == '\'') {
-                isquote = !isquote;
-                isbuildingtoken = true;
-            } else if(std::isspace(static_cast<unsigned char>(c)) && !isquote) {
-                if(isbuildingtoken) {
-                    tokens.push_back(current);
-                    current.clear();
-                    isbuildingtoken = false;
-                }
+            if(c == '"') {
+                isdquote = !isdquote;
+                isbuildingtoken = false;
+            } else if(c == '\'' && !isdquote) {
+                issquote = !issquote;
+                isbuildingtoken = false;
+            } else if(std::isspace(static_cast<unsigned char>(c)) && !issquote && !isdquote) {
+                tokens.push_back(curr);
+                curr.clear();
+                isbuildingtoken = false;
             } else {
-                current += c;
+                curr += c;
                 isbuildingtoken = true;
             }
         }
 
         if(isbuildingtoken) {
-            tokens.push_back(current);
-            current.clear();
+            tokens.push_back(curr);
+            curr.clear();
         }
 
         return tokens;
-    } 
+    }
 }
 
 Command Parser::parse(const std::string& input) const{
