@@ -54,6 +54,7 @@ Command Parser::parse(const std::string& input) const{
     command.name = tokens[0];
 
     for(size_t i = 1; i < tokens.size(); i ++) {
+        std::cout<<tokens[i]<<std::endl;
         command.args.push_back(tokens[i]);
     }
     
