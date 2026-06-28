@@ -10,6 +10,7 @@ namespace {
         singlequote,
         doublequote,
         escape,
+        escapeInDQuote
     };
 
     typedef struct state{
@@ -17,6 +18,7 @@ namespace {
         std::string str;
         processMode mode = processMode::normal;
         bool isbuildingtoken = false;
+        processMode prevMode = mode;
     } state;
 
     void buildtoken(char c, state &ctx) {
@@ -34,12 +36,15 @@ namespace {
 
     void processNormal(char c, state &ctx) {
         if(c == '"') {
+            ctx.prevMode = ctx.mode;
             ctx.mode = processMode::doublequote;
             ctx.isbuildingtoken = true;
         } else if(c == '\'') {
+            ctx.prevMode = ctx.mode;
             ctx.mode = processMode::singlequote;
             ctx.isbuildingtoken = true;
         } else if(c == '\\') {
+            ctx.prevMode = ctx.mode;
             ctx.mode = processMode::escape;
             ctx.isbuildingtoken = true;
         } else if(std::isspace(static_cast<unsigned char>(c))) {
@@ -51,6 +56,7 @@ namespace {
 
     void processSingleQuote(char c, state &ctx) {
         if(c == '\'') {
+            ctx.prevMode = ctx.mode;
             ctx.mode = processMode::normal;
             ctx.isbuildingtoken = true;
         } else {
@@ -60,8 +66,12 @@ namespace {
 
     void processDoubleQuote(char c, state &ctx) {
         if(c == '"') {
+            ctx.prevMode = ctx.mode;
             ctx.mode = processMode::normal;
             ctx.isbuildingtoken = true;
+        } else if(c == '\\') {
+            ctx.prevMode = ctx.mode;
+            ctx.mode = processMode::escape;
         } else {
             buildtoken(c, ctx);
         }
@@ -69,7 +79,13 @@ namespace {
 
     void processEscape(char c, state &ctx) {
         buildtoken(c, ctx);
-        ctx.mode = processMode::normal;
+        if(ctx.prevMode == processMode::doublequote) {
+            ctx.prevMode = ctx.mode;
+            ctx.mode = processMode::doublequote;
+        } else {
+            ctx.prevMode = ctx.mode;
+            ctx.mode = processMode::normal;
+        }
     }
 
     std::vector<std::string> tokenizer(const std::string& input) {
@@ -93,7 +109,6 @@ namespace {
         finishtoken(ctx);
         return ctx.tokens;
     }
-
 }
 
 
