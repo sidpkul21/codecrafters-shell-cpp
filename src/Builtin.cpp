@@ -33,9 +33,9 @@ bool Builtin::execute(const Command& command) const{
         if(isredirect) {
             std::fclose(filePtr);
             filePtr = NULL;
-        } else {
-            std::cout << "\n";
         }
+
+        std::cout << "\n";
     
         return true;
     } 
