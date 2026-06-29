@@ -12,10 +12,28 @@ bool Builtin::isBuiltin(const Command& command) const{
 }
 
 bool Builtin::execute(const Command& command) const{
+    
+    FILE* filePtr;
+    bool isredirect = false;
+
+    if(command.redirect_target != "") {
+        isredirect = true;
+        FILE* filePtr = std::fopen(command.redirect_target.c_str(), "w");
+    }
+
     if(command.name == "echo") {
         for(const auto& elem:command.args) {
-            std::cout << elem << " ";
+            if(!isredirect) {
+                 std::cout << elem << " ";
+            } else {
+                std::fprintf(filePtr, elem.c_str());
+            }
         }
+        
+        if(isredirect) {
+            std::fclose(filePtr);
+        }
+            
         std::cout << "\n";
         return true;
     } 

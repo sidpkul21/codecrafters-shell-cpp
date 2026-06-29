@@ -123,9 +123,17 @@ Command Parser::parse(const std::string& input) const{
     }
 
     command.name = tokens[0];
+    command.redirect_target = "";
 
     for(size_t i = 1; i < tokens.size(); i ++) {
-        command.args.push_back(tokens[i]);
+        if(tokens[i] == ">" || tokens[i] == "1>") {
+            if((i + 1) < tokens.size()) {
+                i += 1;
+                command.redirect_target = tokens[i];
+            }
+        } else {
+            command.args.push_back(tokens[i]);
+        }
     }
     
     return command;
