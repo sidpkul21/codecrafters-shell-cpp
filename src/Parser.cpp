@@ -136,6 +136,9 @@ Command Parser::parse(const std::string& input) const{
             if((i + 1) < tokens.size()) {
                 i += 1;
                 command.redirect_error = tokens[i];
+                FILE* filePtr = std::fopen(command.redirect_error.c_str(), "w");
+                std::fclose(filePtr);
+                filePtr = NULL;
             }
         } else {
             command.args.push_back(tokens[i]);
