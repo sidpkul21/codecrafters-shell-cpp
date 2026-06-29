@@ -126,7 +126,7 @@ Command Parser::parse(const std::string& input) const{
     command.redirect_target = "";
 
     for(size_t i = 1; i < tokens.size(); i ++) {
-        fprintf(stderr, tokens[i].c_str());
+        fprintf(stderr, tokens[i].c_str(), "\n");
         if(tokens[i] == ">" || tokens[i] == "1>") {
             if((i + 1) < tokens.size()) {
                 i += 1;
