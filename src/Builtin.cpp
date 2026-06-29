@@ -18,7 +18,7 @@ bool Builtin::execute(const Command& command) const{
 
     if(command.redirect_target != "") {
         isredirect = true;
-        FILE* filePtr = std::fopen(command.redirect_target.c_str(), "w");
+        filePtr = std::fopen(command.redirect_target.c_str(), "w");
     }
 
     if(command.name == "echo") {
