@@ -7,4 +7,5 @@ class Builtin{
         bool isBuiltin(const Command& command) const;
         bool execute(const Command& command) const;
         bool findfile(const std::string& file, bool print) const;
+        void printError(const std::string& content, const Command& command) const;
 };

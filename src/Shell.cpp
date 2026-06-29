@@ -30,7 +30,10 @@ void Shell::run() {
             if(builtin.findfile(command.name, print_status)) {
                 std::system(command.input.c_str());
             } else {
-                std::cout << command.input << ": command not found" << std::endl;
+                //std::cout << command.input << ": command not found" << std::endl;
+                std::string err_msg = command.input + ": command not found";
+                builtin.printError(err_msg, command);
+                err_msg.clear();
             }
         }
     }

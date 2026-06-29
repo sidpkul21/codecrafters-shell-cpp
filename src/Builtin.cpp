@@ -4,6 +4,20 @@
 #include <filesystem>
 #include <unistd.h>
 
+
+void Builtin::printError(const std::string& err_msg, const Command& command) const{
+    if(command.redirect_error == "") {
+        std::cout << err_msg <<std::endl;
+    } else {
+        FILE* filePtr = std::fopen(command.redirect_error.c_str(), "w");
+        std::fprintf(filePtr, "%s", err_msg.c_str());
+        std::fprintf(filePtr, "\n");
+        std::fclose(filePtr);
+        filePtr = NULL;
+    }
+}
+
+
 bool Builtin::isBuiltin(const Command& command) const{
     return command.name == "pwd"  ||
            command.name == "echo" ||
@@ -15,6 +29,7 @@ bool Builtin::execute(const Command& command) const{
     
     FILE* filePtr;
     bool isredirect = false;
+    std::string err_msg;
 
     if(command.redirect_target != "") {
         isredirect = true;
@@ -59,7 +74,9 @@ bool Builtin::execute(const Command& command) const{
 
         bool print_status = true;
         if(!findfile(type_arg, print_status)) {
-            std::cout << type_arg << ": not found" <<std::endl;
+            err_msg = type_arg + ": not found";
+            printError(err_msg, command);
+            err_msg.clear();
         }
 
         return true;
@@ -73,12 +90,19 @@ bool Builtin::execute(const Command& command) const{
         }
 
         if(chdir(target_dir.c_str()) != 0) {
-            std::cout << command.name << ": " << target_dir << ": No such file or directory" << std::endl;
+            //std::cout << command.name << ": " << target_dir << ": No such file or directory" << std::endl;
+            err_msg = command.name + ": " + target_dir + ": No such file or directory";
+            printError(err_msg, command);
+            err_msg.clear();
         }
         return true;
     }
     
-    std::cout << command.input.c_str() << ": command not found" << std::endl;
+    //std::cout << command.input.c_str() << ": command not found" << std::endl;
+    err_msg = command.input + ": command not found";
+    printError(err_msg, command);
+    err_msg.clear();
+
     return true;
 }
 
