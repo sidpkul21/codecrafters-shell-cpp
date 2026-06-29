@@ -26,12 +26,12 @@ bool Builtin::execute(const Command& command) const{
             if(!isredirect) {
                  std::cout << elem << " ";
             } else {
-                std::fprintf(filePtr, "%s", elem.c_str(), " ");
+                std::string content = elem + " ";
+                std::fprintf(filePtr, "%s", content.c_str());
             }
         }
         
         if(isredirect) {
-            std::fprintf(filePtr, "\n");
             std::fclose(filePtr);
             filePtr = NULL;
         }
