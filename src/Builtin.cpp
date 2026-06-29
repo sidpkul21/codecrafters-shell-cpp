@@ -31,11 +31,10 @@ bool Builtin::execute(const Command& command) const{
         }
         
         if(isredirect) {
+            std::fprintf(filePtr, "\n");
             std::fclose(filePtr);
             filePtr = NULL;
         }
-
-        std::cout << "\n";
     
         return true;
     } 
