@@ -35,6 +35,8 @@ bool Builtin::execute(const Command& command) const{
             std::fprintf(filePtr, "\n");
             std::fclose(filePtr);
             filePtr = NULL;
+        } else {
+            std::cout << "\n";
         }
     
         return true;
