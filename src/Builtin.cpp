@@ -26,7 +26,7 @@ bool Builtin::execute(const Command& command) const{
             if(!isredirect) {
                  std::cout << elem << " ";
             } else {
-                std::fprintf(filePtr, "%s", elem.c_str());
+                std::fprintf(filePtr, "%s", elem.c_str(), " ");
             }
         }
         
