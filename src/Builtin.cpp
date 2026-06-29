@@ -90,7 +90,6 @@ bool Builtin::execute(const Command& command) const{
         }
 
         if(chdir(target_dir.c_str()) != 0) {
-            //std::cout << command.name << ": " << target_dir << ": No such file or directory" << std::endl;
             err_msg = command.name + ": " + target_dir + ": No such file or directory";
             printError(err_msg, command);
             err_msg.clear();
@@ -98,7 +97,6 @@ bool Builtin::execute(const Command& command) const{
         return true;
     }
     
-    //std::cout << command.input.c_str() << ": command not found" << std::endl;
     err_msg = command.input + ": command not found";
     printError(err_msg, command);
     err_msg.clear();
