@@ -123,20 +123,39 @@ Command Parser::parse(const std::string& input) const{
     }
 
     command.name = tokens[0];
-    command.redirect_target = "";
-    command.redirect_error = "";
 
     for(size_t i = 1; i < tokens.size(); i ++) {
         if(tokens[i] == ">" || tokens[i] == "1>") {
             if((i + 1) < tokens.size()) {
                 i += 1;
-                command.redirect_target = tokens[i];
+                command.redirect.op = rdOps::op_stdout;
+                command.redirect.append = false;
+                command.redirect.target = tokens[i];
             }
         } else if(tokens[i] == "2>") {
             if((i + 1) < tokens.size()) {
                 i += 1;
-                command.redirect_error = tokens[i];
-                FILE* filePtr = std::fopen(command.redirect_error.c_str(), "w");
+                command.redirect.op = rdOps::op_stderr;
+                command.redirect.append = false;
+                command.redirect.target = tokens[i];
+                FILE* filePtr = std::fopen(command.redirect.target.c_str(), "w");
+                std::fclose(filePtr);
+                filePtr = NULL;
+            }
+        } else if(tokens[i] == ">>" || tokens[i] == "1>>") {
+            if((i + 1) < tokens.size()) {
+                i += 1;
+                command.redirect.op = rdOps::op_stdout;
+                command.redirect.append = true;
+                command.redirect.target = tokens[i];
+            }
+        } else if(tokens[i] == "2>>") {
+            if((i + 1) < tokens.size()) {
+                i += 1;
+                command.redirect.op = rdOps::op_stderr;
+                command.redirect.append = true;
+                command.redirect.target = tokens[i];
+                FILE* filePtr = std::fopen(command.redirect.target.c_str(), "a");
                 std::fclose(filePtr);
                 filePtr = NULL;
             }

@@ -6,14 +6,19 @@
 
 
 void Builtin::printError(const std::string& err_msg, const Command& command) const{
-    if(command.redirect_error == "") {
-        std::cout << err_msg <<std::endl;
-    } else {
-        FILE* filePtr = std::fopen(command.redirect_error.c_str(), "w");
+    if(command.redirect.op == rdOps::op_stderr) {
+        FILE* filePtr;
+        if(command.redirect.append) {
+            filePtr = std::fopen(command.redirect.target.c_str(), "a");
+        } else {
+            filePtr = std::fopen(command.redirect.target.c_str(), "w");
+        }
         std::fprintf(filePtr, "%s", err_msg.c_str());
         std::fprintf(filePtr, "\n");
         std::fclose(filePtr);
         filePtr = NULL;
+    } else {
+        std::cout << err_msg <<std::endl;
     }
 }
 
@@ -31,9 +36,13 @@ bool Builtin::execute(const Command& command) const{
     bool isredirect = false;
     std::string err_msg;
 
-    if(command.redirect_target != "") {
+    if(command.redirect.op == rdOps::op_stdout) {
         isredirect = true;
-        filePtr = std::fopen(command.redirect_target.c_str(), "w");
+        if(command.redirect.append) {
+            filePtr = std::fopen(command.redirect.target.c_str(), "a");
+        } else {
+            filePtr = std::fopen(command.redirect.target.c_str(), "w");
+        }
     }
 
     if(command.name == "echo") {
