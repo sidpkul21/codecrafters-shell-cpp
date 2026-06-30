@@ -11,9 +11,8 @@ enum class rdOps {
 struct Redirect {
     rdOps op;
     bool append;
-    std::string target = NULL;
+    std::string target;
 };
-
 
 struct Command {
     std::string name;
